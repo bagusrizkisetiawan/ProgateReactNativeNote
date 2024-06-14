@@ -10,6 +10,9 @@ const CurrentPageWidget = ({
   setCurrentPage,
   addNote,
   deleteNote,
+  updateNote,
+  currentNoteId,
+  setCurrentNoteId,
 }) => {
   switch (currentPage) {
     case "home":
@@ -18,12 +21,20 @@ const CurrentPageWidget = ({
           noteList={noteList}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote}
+          setCurrentNoteId={setCurrentNoteId}
         />
       );
     case "add":
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case "edit":
-      return <EditNote />;
+      const noteToEdit = noteList.find((note) => note.id === currentNoteId);
+      return (
+        <EditNote
+          setCurrentPage={setCurrentPage}
+          updateNote={updateNote}
+          note={noteToEdit}
+        />
+      );
     default:
       return <Home />;
   }
@@ -31,6 +42,7 @@ const CurrentPageWidget = ({
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
+  const [currentNoteId, setCurrentNoteId] = useState(null);
 
   const [noteList, setNoteList] = useState([
     {
@@ -40,7 +52,7 @@ const App = () => {
     },
   ]);
 
-  // menambahkan Note
+  // Menambahkan Note
   const addNote = (title, desc) => {
     const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
 
@@ -59,6 +71,13 @@ const App = () => {
     setNoteList(noteList.filter((note) => note.id !== id));
   };
 
+  // Memperbarui Note
+  const updateNote = (id, title, desc) => {
+    setNoteList(
+      noteList.map((note) => (note.id === id ? { id, title, desc } : note))
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
@@ -68,6 +87,9 @@ const App = () => {
         noteList={noteList}
         addNote={addNote}
         deleteNote={deleteNote}
+        updateNote={updateNote}
+        currentNoteId={currentNoteId}
+        setCurrentNoteId={setCurrentNoteId}
       />
     </SafeAreaView>
   );

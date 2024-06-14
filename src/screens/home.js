@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, View, Text } from "react-native";
 import CustomButton from "../components/customButton";
 
-// Tambahkan "setCurrentPage" sebagai sebuah prop
-const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
+// Tambahkan "setCurrentPage", "deleteNote", dan "setCurrentNoteId" sebagai sebuah prop
+const NoteCard = ({ item, setCurrentPage, deleteNote, setCurrentNoteId }) => (
   <View style={styles.card}>
     <Text style={styles.cardTitle}>{item.title}</Text>
     <Text>{item.desc}</Text>
@@ -13,8 +13,8 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
         text="Ubah"
         fontSize={12}
         width={100}
-        // Tuliskan layar "edit" untuk ketika tombol-nya ditekan
         onPress={() => {
+          setCurrentNoteId(item.id);
           setCurrentPage("edit");
         }}
       />
@@ -24,39 +24,34 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
         text="Hapus"
         fontSize={12}
         width={100}
-        onPress={() => {
-          deleteNote(item.id);
-        }}
+        onPress={() => deleteNote(item.id)}
       />
     </View>
   </View>
 );
 
-// Tambahkan "setCurrentPage" sebagai sebuah prop
-const Home = ({ noteList, setCurrentPage, deleteNote }) => (
+// Tambahkan "setCurrentPage", "deleteNote", dan "setCurrentNoteId" sebagai sebuah prop
+const Home = ({ noteList, setCurrentPage, deleteNote, setCurrentNoteId }) => (
   <View style={styles.container}>
     <CustomButton
       backgroundColor="#DDD"
       color="#203239"
       text="Tambahkan Note"
       width="100%"
-      // Tuliskan layar "add" untuk ketika tombol-nya ditekan
-      onPress={() => {
-        setCurrentPage("add");
-      }}
+      onPress={() => setCurrentPage("add")}
     />
     <FlatList
       showsVerticalScrollIndicator={false}
       data={noteList}
-      // Berikan function "setCurrentPage" ke component "NoteCard"
       renderItem={({ item }) => (
         <NoteCard
           item={item}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote}
+          setCurrentNoteId={setCurrentNoteId}
         />
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
     />
   </View>
 );
