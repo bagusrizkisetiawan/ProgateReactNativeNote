@@ -9,10 +9,17 @@ const CurrentPageWidget = ({
   noteList,
   setCurrentPage,
   addNote,
+  deleteNote,
 }) => {
   switch (currentPage) {
     case "home":
-      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+        />
+      );
     case "add":
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case "edit":
@@ -47,6 +54,11 @@ const App = () => {
     ]);
   };
 
+  // Menghapus Note
+  const deleteNote = (id) => {
+    setNoteList(noteList.filter((note) => note.id !== id));
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
@@ -55,6 +67,7 @@ const App = () => {
         setCurrentPage={setCurrentPage}
         noteList={noteList}
         addNote={addNote}
+        deleteNote={deleteNote}
       />
     </SafeAreaView>
   );
